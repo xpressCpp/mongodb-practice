@@ -33,13 +33,13 @@ db.sales.aggregate([
     { $group: {
         _id: { store: '$store', item: '$items.name' },
         totalQty: { $sum: '$items.qty' },
-        totalRevenue: { $sum: { $multiply: ['$items.qty', '$items.price'] }}
+        totalRevenue: { $sum: { $multiply: ['$items.qty', '$items.price'] } }
     }},
-    { $sort: { "_id.store": 1, totalQty: -1 }},
+    { $sort: { '_id.store': 1, totalQty: -1 }},
     { $group: {
         _id: '$_id.store',
         topItem: { $first: '$_id.item' },
-        topQty: { $first: '$totalQty' },
-        totalRevenue: { $sum: '$totalRevenue' }
+        topQty: { $first: '$totalQty'},
+        totalRevenue: { $sum: '$totalRevenue' } 
     }}
 ])
