@@ -10,3 +10,24 @@ db.products.insertMany([
 // Que-3: 
 // 1. Write an aggregation query to find the average rating and total stock value (price × stock) for each category.
 // 2. Then, decide and explain which field(s) you should create an index on to make this aggregation most efficient — and why.
+
+db.products.aggregate([
+    // Keeping the required field only
+    { $project: {
+        category: 1,
+        rating: 1,
+        stock: 1,
+        price: 1
+    }},
+    { $group: {
+        _id: '$category',
+        avgRating: { $avg: '$rating'  },
+        stockValue: { $sum: { $multiply: ['$stock', '$price'] } }
+    }},
+    { $project: {
+        _id: 0,
+        category: '$_id',
+        avgRating: { $round: ['$avgRating', 1] },
+        stockValue: 1
+    }}
+])
